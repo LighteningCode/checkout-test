@@ -12,22 +12,22 @@ function Cart() {
 
   const items = [
     {
-      name: "Something",
+      name: "item1",
       description: "Brief Description",
       price: "30.00"
     },
     {
-      name: "Something",
+      name: "item2",
       description: "Brief Description",
       price: "12.29"
     },
     {
-      name: "Something",
+      name: "item3",
       description: "Brief Description",
       price: "9.30"
     },
     {
-      name: "Something",
+      name: "item4",
       description: "Brief Description",
       price: "3.30"
     },
@@ -46,10 +46,10 @@ function Cart() {
         <span className="badge badge-secondary badge-pill">{items.length}</span>
       </h4>
       <div className="card">
-        <ul class="list-group list-group-flush">
+        <ul className="list-group list-group-flush">
           {items.map(item =>
 
-            <li class="list-group-item">
+            <li key={item.name} className="list-group-item">
               <div className="d-flex flex-row justify-content-between">
                 <div className="d-flex flex-column">
                   <h6 style={{ fontSize: '1.2rem' }}>{item.name}</h6>
@@ -63,7 +63,7 @@ function Cart() {
             </li>
           )}
 
-          <li class="list-group-item">
+          <li className="list-group-item">
             <div className="d-flex flex-row justify-content-between">
               <div className="d-flex flex-column">
                 <h6 className="lead">Total (GHC)</h6>
@@ -82,23 +82,69 @@ function Cart() {
 }
 
 function Billing() {
-  const Col = 'div';
   
+  const initialFormData = Object.freeze({
+    firstname: "",
+    lastname: "",
+    username: "",
+    email: "",
+    address1: "",
+    address2: "",
+    country: "",
+    state: "",
+    zipcode: "",
+    checkbox1: "",
+    checkbox2: "",
+    payment: "",
+    paymentCardName: "",
+    paymentCardNumber: "",
+    paymentCardExpirationDate: "",
+    paymentCVV: "",
+  });
+
+  const [formData, updateFormData] = React.useState(initialFormData);
+  const [validated, setValidated] = React.useState(false);
+
+  const handleChange = (e) => {
+    updateFormData({
+      ...formData,
+
+      // Trimming any whitespace
+      [e.target.name]: e.target.value.trim()
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+      setValidated(false)
+    }else{
+      setValidated(true)
+    }
+    console.log(formData);
+    // ... submit to API or something
+  };
+
+
+  const Col = 'div';
   return (
-    <Form>
+    <Form noValidate validated={validated}>
       <div className="container-fluid mb-5">
         <div className="row">
           <div className="col-md-6 pl-0">
             <Form.Group as={Col} >
               <Form.Label column="lg" lg={10}>First name</Form.Label>
-              <Form.Control size="lg" type="text" />
+              <Form.Control size="lg" onChange={handleChange} type="text" required name="firstname" />
             </Form.Group>
           </div>
 
           <div className="col-md-6 pr-0">
             <Form.Group as={Col}>
               <Form.Label column="lg" lg={10}>Last name</Form.Label>
-              <Form.Control size="lg" type="text" />
+              <Form.Control size="lg" onChange={handleChange} type="text" name="lastname" />
             </Form.Group>
           </div>
         </div>
@@ -112,7 +158,7 @@ function Billing() {
               <InputGroup.Prepend>
                 <InputGroup.Text>@ </InputGroup.Text>
               </InputGroup.Prepend>
-              <FormControl size="lg" placeholder="Username" />
+              <FormControl size="lg" onChange={handleChange} placeholder="Username" name="username" />
             </InputGroup>
           </div>
         </div>
@@ -121,7 +167,7 @@ function Billing() {
           <div className="col-md-12 p-0">
             <Form.Group as={Col}>
               <Form.Label className="pt-3" column="lg" lg={10}>Email (optional)</Form.Label>
-              <Form.Control size="lg" type="email" placeholder="you@example.com" />
+              <Form.Control size="lg" onChange={handleChange} type="email" placeholder="you@example.com" name="email" />
             </Form.Group>
           </div>
         </div>
@@ -130,7 +176,7 @@ function Billing() {
           <div className="col-md-12 p-0">
             <Form.Group as={Col}>
               <Form.Label className="pt-0" column="lg" lg={10}>Address</Form.Label>
-              <Form.Control size="lg" type="email" placeholder="" />
+              <Form.Control size="lg" onChange={handleChange} type="text" name="address1" placeholder="" />
             </Form.Group>
           </div>
         </div>
@@ -139,7 +185,7 @@ function Billing() {
           <div className="col-md-12 p-0">
             <Form.Group as={Col}>
               <Form.Label className="pt-0" column="lg" lg={10}>Address 2 (Optional)</Form.Label>
-              <Form.Control size="lg" type="email" placeholder="" />
+              <Form.Control size="lg" onChange={handleChange} type="text" name="address2" placeholder="" />
             </Form.Group>
           </div>
         </div>
@@ -148,25 +194,25 @@ function Billing() {
           <div className="col-md-5 pl-0">
             <Form.Group>
               <Form.Label>Country</Form.Label>
-              <Form.Control size="lg" as="select" custom>
-                <option>Ghana(GH)</option>
-                <option>Togo (TG)</option>
+              <Form.Control size="lg" onChange={handleChange} value="Ghana" as="select" name="country" custom>
+                <option value="Ghana" >Ghana(GH)</option>
+                <option value="Togo">Togo (TG)</option>
               </Form.Control>
             </Form.Group>
           </div>
           <div className="col-md-4">
             <Form.Group>
               <Form.Label>State</Form.Label>
-              <Form.Control size="lg" as="select" custom>
-                <option>Accra</option>
-                <option>Kumasi</option>
+              <Form.Control size="lg" onChange={handleChange} value="Accra" as="select" name="state" custom>
+                <option value="Accra" >Accra</option>
+                <option value="Kumasi">Kumasi</option>
               </Form.Control>
             </Form.Group>
           </div>
           <div className="col-md-3 pr-0">
             <Form.Group>
               <Form.Label>Zip</Form.Label>
-              <Form.Control size="lg" type="text" />
+              <Form.Control size="lg" onChange={handleChange} name="zipcode" type="text" />
             </Form.Group>
           </div>
         </div>
@@ -179,6 +225,9 @@ function Billing() {
               custom
               type={'checkbox'}
               id={'checkbox1'}
+              name={'checkbox1'}
+              onChange={handleChange}
+              value={'sameShippingAddress'}
               label={`Shipping address is the same as my billing address`}
             />
           </div>
@@ -189,6 +238,9 @@ function Billing() {
               custom
               type={'checkbox'}
               id={'checkbox2'}
+              name={'checkbox2'}
+              value={'saveInfoNextTime'}
+              onChange={handleChange}
               label={`Save this information for next time`}
             />
           </div>
@@ -203,20 +255,29 @@ function Billing() {
               <Form.Check
                 custom
                 type={'radio'}
+                name={'payment'}
                 id={'radio1'}
                 label={`Credit card`}
+                value={'credit card'}
+                onChange={handleChange}
               />
               <Form.Check
                 custom
                 type={'radio'}
+                name={'payment'}
                 id={'radio2'}
                 label={`Debit card`}
+                value={`Debit card`}
+                onChange={handleChange}
               />
               <Form.Check
                 custom
                 type={'radio'}
+                name={'payment'}
                 id={'radio3'}
                 label={`PayPal`}
+                value={`PayPal`}
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -226,7 +287,7 @@ function Billing() {
           <div className="col-md-6 pl-0">
             <Form.Group as={Col} >
               <Form.Label column="lg" lg={10}>Name on Card</Form.Label>
-              <Form.Control size="lg" type="text" />
+              <Form.Control size="lg" onChange={handleChange} type="text" name="paymentCardName" />
               <Form.Text id="passwordHelpBlock" muted>
                 Full name as displayed on card
               </Form.Text>
@@ -236,7 +297,7 @@ function Billing() {
           <div className="col-md-6 pr-0">
             <Form.Group as={Col}>
               <Form.Label column="lg" lg={10}>Credit card number</Form.Label>
-              <Form.Control size="lg" type="text" />
+              <Form.Control size="lg" onChange={handleChange} name="paymentCardNumber" type="text" />
             </Form.Group>
           </div>
         </div>
@@ -245,14 +306,14 @@ function Billing() {
           <div className="col-md-3 pl-0">
             <Form.Group as={Col} >
               <Form.Label column="lg" lg={10}>Expiration</Form.Label>
-              <Form.Control size="lg" type="text" />
+              <Form.Control size="lg" onChange={handleChange} name="paymentCardExpirationDate" type="text" />
             </Form.Group>
           </div>
 
           <div className="col-md-3 pr-0">
             <Form.Group as={Col}>
               <Form.Label column="lg" lg={10}>CVV</Form.Label>
-              <Form.Control size="lg" type="text" />
+              <Form.Control size="lg" onChange={handleChange} name="paymentCVV" type="text" />
             </Form.Group>
           </div>
         </div>
@@ -261,7 +322,7 @@ function Billing() {
 
         <div className="row">
           <div className="col-md-12 pl-0">
-           <Button variant="primary" size="lg" block>Continue to checkout</Button>
+           <Button variant="primary" onClick={handleSubmit} size="lg" type="submit" block>Continue to checkout</Button>
           </div>
         </div>
 
