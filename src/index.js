@@ -1,13 +1,59 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter, Route, withRouter } from 'react-router-dom';
 import './index.css';
-import App from './App';
+import ProductComponent from './CheckoutComponent';
+import BuyComponent from './BuyComponent'
 import * as serviceWorker from './serviceWorker';
 
+
+let items = [
+  {
+    id: '1',
+    name: "Plain White",
+    price: "20.00",
+    imageurl: "/productimages/white_shirt.jpg",
+  },
+  {
+    id: '2',
+    name: "Nike Airmax",
+    price: "60.00",
+    imageurl: "/productimages/nike.jpg",
+  },
+  {
+    id: '3',
+    name: "Black Jeans",
+    price: "32.00",
+    imageurl: "/productimages/black_jeans.jpg",
+  },
+  {
+    id: '4',
+    name: "Light Blue Jeans",
+    price: "30.00",
+    imageurl: "/productimages/blue_jeans.jpg"
+  },
+
+]
+
+
+
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <BrowserRouter>
+    <Route
+      exact
+      path="/checkout"
+      render={() => (
+        <ProductComponent allItems={items} />
+      )}
+    />
+    <Route
+      exact
+      path="/"
+      render={() => (
+        <BuyComponent items={items} />
+      )}
+    />
+  </BrowserRouter>,
   document.getElementById('root')
 );
 

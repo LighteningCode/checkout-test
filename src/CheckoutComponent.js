@@ -7,31 +7,16 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import { FormGroup } from 'react-bootstrap';
+import { useHistory, useLocation } from 'react-router-dom';
 
-function Cart() {
 
-  const items = [
-    {
-      name: "item1",
-      description: "Brief Description",
-      price: "30.00"
-    },
-    {
-      name: "item2",
-      description: "Brief Description",
-      price: "12.29"
-    },
-    {
-      name: "item3",
-      description: "Brief Description",
-      price: "9.30"
-    },
-    {
-      name: "item4",
-      description: "Brief Description",
-      price: "3.30"
-    },
-  ];
+function Cart(props) {
+  let history = useHistory()
+  const items = props.cartItems;
+
+  if (items.length < 1) {
+    history.push('/');
+  }
 
   let total = 0;
 
@@ -81,8 +66,8 @@ function Cart() {
   );
 }
 
-function Billing() {
-  
+function Billing(props) {
+
   const initialFormData = Object.freeze({
     firstname: "",
     lastname: "",
@@ -93,14 +78,16 @@ function Billing() {
     country: "",
     state: "",
     zipcode: "",
-    checkbox1: "",
-    checkbox2: "",
+    saveInfoNextTime: "",
+    sameShippingAddress: "",
     payment: "",
     paymentCardName: "",
     paymentCardNumber: "",
     paymentCardExpirationDate: "",
     paymentCVV: "",
   });
+
+
 
   const [formData, updateFormData] = React.useState(initialFormData);
   const [validated, setValidated] = React.useState(false);
@@ -121,10 +108,10 @@ function Billing() {
       e.preventDefault();
       e.stopPropagation();
       setValidated(false)
-    }else{
+    } else {
       setValidated(true)
     }
-    console.log(formData);
+    // console.log(formData);
     // ... submit to API or something
   };
 
@@ -225,9 +212,9 @@ function Billing() {
               custom
               type={'checkbox'}
               id={'checkbox1'}
-              name={'checkbox1'}
+              name={'sameShippingAddress'}
               onChange={handleChange}
-              value={'sameShippingAddress'}
+              value={'true'}
               label={`Shipping address is the same as my billing address`}
             />
           </div>
@@ -238,8 +225,8 @@ function Billing() {
               custom
               type={'checkbox'}
               id={'checkbox2'}
-              name={'checkbox2'}
-              value={'saveInfoNextTime'}
+              name={'saveInfoNextTime'}
+              value={'true'}
               onChange={handleChange}
               label={`Save this information for next time`}
             />
@@ -322,7 +309,7 @@ function Billing() {
 
         <div className="row">
           <div className="col-md-12 pl-0">
-           <Button variant="primary" onClick={handleSubmit} size="lg" type="submit" block>Continue to checkout</Button>
+            <Button variant="primary" onClick={handleSubmit} size="lg" type="submit" block>Continue to checkout</Button>
           </div>
         </div>
 
@@ -332,7 +319,25 @@ function Billing() {
 }
 
 
-function App() {
+
+function CheckoutComponent(props) {
+  let foundItems = [];
+  let allItems = [];
+  const { state } = useLocation();
+  const cartItems = state.cartItems
+  
+  allItems = props.allItems;
+
+  if (cartItems) {
+    for (const [key, id] of Object.entries(cartItems)) {
+      let foundItem = (allItems.find(item => item.id == id));
+      if (foundItem) {
+        foundItems.push(foundItem)
+      }
+    }
+  }
+
+
   return (
     <div>
       <div className="py-5 text-center">
@@ -344,11 +349,11 @@ function App() {
       <div className="container">
         <div className="row">
           <div className="col-md-8"><Billing /></div>
-          <div className="col-md-4"><Cart /></div>
+          <div className="col-md-4"><Cart allCartItems={allItems} cartItems={foundItems} /></div>
         </div>
       </div>
     </div>
   );
 }
 
-export default App;
+export default CheckoutComponent;
