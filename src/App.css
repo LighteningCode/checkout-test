@@ -1,10 +1,5 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.checkedItem{
+  background-color: #e6e6e6;
 }
 
 @media (prefers-reduced-motion: no-preference) {

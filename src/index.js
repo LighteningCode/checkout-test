@@ -13,31 +13,39 @@ let items = [
     name: "Plain White",
     price: "20.00",
     imageurl: "/productimages/white_shirt.jpg",
+    checked: false
   },
   {
     id: '2',
     name: "Nike Airmax",
     price: "60.00",
     imageurl: "/productimages/nike.jpg",
+    checked: false
   },
   {
     id: '3',
     name: "Black Jeans",
     price: "32.00",
     imageurl: "/productimages/black_jeans.jpg",
+    checked: false
   },
   {
     id: '4',
     name: "Light Blue Jeans",
     price: "30.00",
-    imageurl: "/productimages/blue_jeans.jpg"
+    imageurl: "/productimages/blue_jeans.jpg",
+    checked: false
   },
 
-]
+];
+
+
+
 
 
 
 ReactDOM.render(
+
   <BrowserRouter>
     <Route
       exact

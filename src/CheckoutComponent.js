@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
@@ -6,6 +6,7 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 import { FormGroup } from 'react-bootstrap';
 import { useHistory, useLocation } from 'react-router-dom';
 
@@ -91,6 +92,14 @@ function Billing(props) {
 
   const [formData, updateFormData] = React.useState(initialFormData);
   const [validated, setValidated] = React.useState(false);
+  const [show, setShow] = useState(false);
+
+  const closeModal = () => {
+    setShow(false)
+  }
+  const openModal = () => {
+    setShow(true)
+  }
 
   const handleChange = (e) => {
     updateFormData({
@@ -109,7 +118,9 @@ function Billing(props) {
       e.stopPropagation();
       setValidated(false)
     } else {
-      setValidated(true)
+      openModal();
+      console.log(formData);
+      
     }
     // console.log(formData);
     // ... submit to API or something
@@ -118,203 +129,211 @@ function Billing(props) {
 
   const Col = 'div';
   return (
-    <Form noValidate validated={validated}>
-      <div className="container-fluid mb-5">
-        <div className="row">
-          <div className="col-md-6 pl-0">
-            <Form.Group as={Col} >
-              <Form.Label column="lg" lg={10}>First name</Form.Label>
-              <Form.Control size="lg" onChange={handleChange} type="text" required name="firstname" />
-            </Form.Group>
+    <div>
+      <Modal show={show} onHide={closeModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Payment Successful</Modal.Title>
+        </Modal.Header>
+        <Modal.Body><p className="text-success">Payment successful</p></Modal.Body>
+      </Modal>
+      <Form noValidate validated={validated}>
+        <div className="container-fluid mb-5">
+          <div className="row">
+            <div className="col-md-6 pl-0">
+              <Form.Group as={Col} >
+                <Form.Label column="lg" lg={10}>First name</Form.Label>
+                <Form.Control size="lg" onChange={handleChange} type="text" required name="firstname" />
+              </Form.Group>
+            </div>
+
+            <div className="col-md-6 pr-0">
+              <Form.Group as={Col}>
+                <Form.Label column="lg" lg={10}>Last name</Form.Label>
+                <Form.Control size="lg" onChange={handleChange} type="text" name="lastname" />
+              </Form.Group>
+            </div>
           </div>
 
-          <div className="col-md-6 pr-0">
-            <Form.Group as={Col}>
-              <Form.Label column="lg" lg={10}>Last name</Form.Label>
-              <Form.Control size="lg" onChange={handleChange} type="text" name="lastname" />
-            </Form.Group>
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-md-12 p-0">
-            <Form.Label className="pt-0" column="lg" lg={10}>
-              Username
+          <div className="row">
+            <div className="col-md-12 p-0">
+              <Form.Label className="pt-0" column="lg" lg={10}>
+                Username
             </Form.Label>
-            <InputGroup className="">
-              <InputGroup.Prepend>
-                <InputGroup.Text>@ </InputGroup.Text>
-              </InputGroup.Prepend>
-              <FormControl size="lg" onChange={handleChange} placeholder="Username" name="username" />
-            </InputGroup>
+              <InputGroup className="">
+                <InputGroup.Prepend>
+                  <InputGroup.Text>@ </InputGroup.Text>
+                </InputGroup.Prepend>
+                <FormControl size="lg" onChange={handleChange} placeholder="Username" name="username" />
+              </InputGroup>
+            </div>
           </div>
-        </div>
 
-        <div className="row">
-          <div className="col-md-12 p-0">
-            <Form.Group as={Col}>
-              <Form.Label className="pt-3" column="lg" lg={10}>Email (optional)</Form.Label>
-              <Form.Control size="lg" onChange={handleChange} type="email" placeholder="you@example.com" name="email" />
-            </Form.Group>
+          <div className="row">
+            <div className="col-md-12 p-0">
+              <Form.Group as={Col}>
+                <Form.Label className="pt-3" column="lg" lg={10}>Email (optional)</Form.Label>
+                <Form.Control size="lg" onChange={handleChange} type="email" placeholder="you@example.com" name="email" />
+              </Form.Group>
+            </div>
           </div>
-        </div>
 
-        <div className="row">
-          <div className="col-md-12 p-0">
-            <Form.Group as={Col}>
-              <Form.Label className="pt-0" column="lg" lg={10}>Address</Form.Label>
-              <Form.Control size="lg" onChange={handleChange} type="text" name="address1" placeholder="" />
-            </Form.Group>
+          <div className="row">
+            <div className="col-md-12 p-0">
+              <Form.Group as={Col}>
+                <Form.Label className="pt-0" column="lg" lg={10}>Address</Form.Label>
+                <Form.Control size="lg" onChange={handleChange} type="text" name="address1" placeholder="" />
+              </Form.Group>
+            </div>
           </div>
-        </div>
 
-        <div className="row">
-          <div className="col-md-12 p-0">
-            <Form.Group as={Col}>
-              <Form.Label className="pt-0" column="lg" lg={10}>Address 2 (Optional)</Form.Label>
-              <Form.Control size="lg" onChange={handleChange} type="text" name="address2" placeholder="" />
-            </Form.Group>
+          <div className="row">
+            <div className="col-md-12 p-0">
+              <Form.Group as={Col}>
+                <Form.Label className="pt-0" column="lg" lg={10}>Address 2 (Optional)</Form.Label>
+                <Form.Control size="lg" onChange={handleChange} type="text" name="address2" placeholder="" />
+              </Form.Group>
+            </div>
           </div>
-        </div>
 
-        <div className="row">
-          <div className="col-md-5 pl-0">
-            <Form.Group>
-              <Form.Label>Country</Form.Label>
-              <Form.Control size="lg" onChange={handleChange} value="Ghana" as="select" name="country" custom>
-                <option value="Ghana" >Ghana(GH)</option>
-                <option value="Togo">Togo (TG)</option>
-              </Form.Control>
-            </Form.Group>
+          <div className="row">
+            <div className="col-md-5 pl-0">
+              <Form.Group>
+                <Form.Label>Country</Form.Label>
+                <Form.Control size="lg" onChange={handleChange} value="Ghana" as="select" name="country" custom>
+                  <option value="Ghana" >Ghana(GH)</option>
+                  <option value="Togo">Togo (TG)</option>
+                </Form.Control>
+              </Form.Group>
+            </div>
+            <div className="col-md-4">
+              <Form.Group>
+                <Form.Label>State</Form.Label>
+                <Form.Control size="lg" onChange={handleChange} value="Accra" as="select" name="state" custom>
+                  <option value="Accra" >Accra</option>
+                  <option value="Kumasi">Kumasi</option>
+                </Form.Control>
+              </Form.Group>
+            </div>
+            <div className="col-md-3 pr-0">
+              <Form.Group>
+                <Form.Label>Zip</Form.Label>
+                <Form.Control size="lg" onChange={handleChange} name="zipcode" type="text" />
+              </Form.Group>
+            </div>
           </div>
-          <div className="col-md-4">
-            <Form.Group>
-              <Form.Label>State</Form.Label>
-              <Form.Control size="lg" onChange={handleChange} value="Accra" as="select" name="state" custom>
-                <option value="Accra" >Accra</option>
-                <option value="Kumasi">Kumasi</option>
-              </Form.Control>
-            </Form.Group>
-          </div>
-          <div className="col-md-3 pr-0">
-            <Form.Group>
-              <Form.Label>Zip</Form.Label>
-              <Form.Control size="lg" onChange={handleChange} name="zipcode" type="text" />
-            </Form.Group>
-          </div>
-        </div>
 
-        <hr />
+          <hr />
 
-        <div className="row">
-          <div className="col-md-12">
-            <Form.Check
-              custom
-              type={'checkbox'}
-              id={'checkbox1'}
-              name={'sameShippingAddress'}
-              onChange={handleChange}
-              value={'true'}
-              label={`Shipping address is the same as my billing address`}
-            />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-md-12">
-            <Form.Check
-              custom
-              type={'checkbox'}
-              id={'checkbox2'}
-              name={'saveInfoNextTime'}
-              value={'true'}
-              onChange={handleChange}
-              label={`Save this information for next time`}
-            />
-          </div>
-        </div>
-
-        <hr />
-
-        <h4>Payment</h4>
-        <div className="row">
-          <div className="col-md-12">
-            <div className="d-flex flex-column">
+          <div className="row">
+            <div className="col-md-12">
               <Form.Check
                 custom
-                type={'radio'}
-                name={'payment'}
-                id={'radio1'}
-                label={`Credit card`}
-                value={'credit card'}
+                type={'checkbox'}
+                id={'checkbox1'}
+                name={'sameShippingAddress'}
                 onChange={handleChange}
-              />
-              <Form.Check
-                custom
-                type={'radio'}
-                name={'payment'}
-                id={'radio2'}
-                label={`Debit card`}
-                value={`Debit card`}
-                onChange={handleChange}
-              />
-              <Form.Check
-                custom
-                type={'radio'}
-                name={'payment'}
-                id={'radio3'}
-                label={`PayPal`}
-                value={`PayPal`}
-                onChange={handleChange}
+                value={'true'}
+                label={`Shipping address is the same as my billing address`}
               />
             </div>
           </div>
-        </div>
+          <div className="row">
+            <div className="col-md-12">
+              <Form.Check
+                custom
+                type={'checkbox'}
+                id={'checkbox2'}
+                name={'saveInfoNextTime'}
+                value={'true'}
+                onChange={handleChange}
+                label={`Save this information for next time`}
+              />
+            </div>
+          </div>
 
-        <div className="row">
-          <div className="col-md-6 pl-0">
-            <Form.Group as={Col} >
-              <Form.Label column="lg" lg={10}>Name on Card</Form.Label>
-              <Form.Control size="lg" onChange={handleChange} type="text" name="paymentCardName" />
-              <Form.Text id="passwordHelpBlock" muted>
-                Full name as displayed on card
+          <hr />
+
+          <h4>Payment</h4>
+          <div className="row">
+            <div className="col-md-12">
+              <div className="d-flex flex-column">
+                <Form.Check
+                  custom
+                  type={'radio'}
+                  name={'payment'}
+                  id={'radio1'}
+                  label={`Credit card`}
+                  value={'credit card'}
+                  onChange={handleChange}
+                />
+                <Form.Check
+                  custom
+                  type={'radio'}
+                  name={'payment'}
+                  id={'radio2'}
+                  label={`Debit card`}
+                  value={`Debit card`}
+                  onChange={handleChange}
+                />
+                <Form.Check
+                  custom
+                  type={'radio'}
+                  name={'payment'}
+                  id={'radio3'}
+                  label={`PayPal`}
+                  value={`PayPal`}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col-md-6 pl-0">
+              <Form.Group as={Col} >
+                <Form.Label column="lg" lg={10}>Name on Card</Form.Label>
+                <Form.Control size="lg" onChange={handleChange} type="text" name="paymentCardName" />
+                <Form.Text id="passwordHelpBlock" muted>
+                  Full name as displayed on card
               </Form.Text>
-            </Form.Group>
+              </Form.Group>
+            </div>
+
+            <div className="col-md-6 pr-0">
+              <Form.Group as={Col}>
+                <Form.Label column="lg" lg={10}>Credit card number</Form.Label>
+                <Form.Control size="lg" onChange={handleChange} name="paymentCardNumber" type="text" />
+              </Form.Group>
+            </div>
           </div>
 
-          <div className="col-md-6 pr-0">
-            <Form.Group as={Col}>
-              <Form.Label column="lg" lg={10}>Credit card number</Form.Label>
-              <Form.Control size="lg" onChange={handleChange} name="paymentCardNumber" type="text" />
-            </Form.Group>
+          <div className="row">
+            <div className="col-md-3 pl-0">
+              <Form.Group as={Col} >
+                <Form.Label column="lg" lg={10}>Expiration</Form.Label>
+                <Form.Control size="lg" onChange={handleChange} name="paymentCardExpirationDate" type="text" />
+              </Form.Group>
+            </div>
+
+            <div className="col-md-3 pr-0">
+              <Form.Group as={Col}>
+                <Form.Label column="lg" lg={10}>CVV</Form.Label>
+                <Form.Control size="lg" onChange={handleChange} name="paymentCVV" type="text" />
+              </Form.Group>
+            </div>
           </div>
+
+          <hr className="my-5" />
+
+          <div className="row">
+            <div className="col-md-12 pl-0">
+              <Button variant="primary" onClick={handleSubmit} size="lg" type="submit" block>Continue to checkout</Button>
+            </div>
+          </div>
+
         </div>
-
-        <div className="row">
-          <div className="col-md-3 pl-0">
-            <Form.Group as={Col} >
-              <Form.Label column="lg" lg={10}>Expiration</Form.Label>
-              <Form.Control size="lg" onChange={handleChange} name="paymentCardExpirationDate" type="text" />
-            </Form.Group>
-          </div>
-
-          <div className="col-md-3 pr-0">
-            <Form.Group as={Col}>
-              <Form.Label column="lg" lg={10}>CVV</Form.Label>
-              <Form.Control size="lg" onChange={handleChange} name="paymentCVV" type="text" />
-            </Form.Group>
-          </div>
-        </div>
-
-        <hr className="my-5" />
-
-        <div className="row">
-          <div className="col-md-12 pl-0">
-            <Button variant="primary" onClick={handleSubmit} size="lg" type="submit" block>Continue to checkout</Button>
-          </div>
-        </div>
-
-      </div>
-    </Form>
+      </Form>
+    </div>
   );
 }
 
@@ -325,18 +344,15 @@ function CheckoutComponent(props) {
   let allItems = [];
   const { state } = useLocation();
   const cartItems = state.cartItems
-  
-  allItems = props.allItems;
 
   if (cartItems) {
-    for (const [key, id] of Object.entries(cartItems)) {
-      let foundItem = (allItems.find(item => item.id == id));
-      if (foundItem) {
-        foundItems.push(foundItem)
+    cartItems.forEach(item => {
+      if (item.checked == true) {
+        foundItems.push(item)
       }
-    }
-  }
+    });
 
+  }
 
   return (
     <div>
@@ -349,7 +365,7 @@ function CheckoutComponent(props) {
       <div className="container">
         <div className="row">
           <div className="col-md-8"><Billing /></div>
-          <div className="col-md-4"><Cart allCartItems={allItems} cartItems={foundItems} /></div>
+          <div className="col-md-4"><Cart cartItems={foundItems} /></div>
         </div>
       </div>
     </div>
